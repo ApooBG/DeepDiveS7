@@ -15,7 +15,8 @@ public class PlayerControl : NetworkBehaviour
         Walk,
         ReverseWalk,
         Run,
-        Throw
+        Throw,
+        Aim
     }
 
 
@@ -25,9 +26,11 @@ public class PlayerControl : NetworkBehaviour
     [SerializeField]
     private float runSpeedOffset = 2.0f;
 
-
     [SerializeField]
     private float rotationSpeed = 3.5f;
+
+    [SerializeField]
+    public ThrowBallManager throwBallManager;
 
     [SerializeField]
     private Vector2 defaultInitialPlanePosition = new Vector2(-4, 4);
@@ -80,6 +83,41 @@ public class PlayerControl : NetworkBehaviour
         Vector3 direction = transform.TransformDirection(Vector3.forward);
         float forwardInput = Input.GetAxis("Vertical");
         Vector3 inputPosition = direction * forwardInput;
+        
+        //rotate at all times
+        transform.Rotate(inputRotation * rotationSpeed, Space.World);
+
+        if (forwardInput == 0 && ActiveAimingActionkey() && !throwBallManager.isAiming)
+        {
+            throwBallManager.HandleThrow();
+            UpdatePlayerStateServerRpc(PlayerState.Aim);
+            return;
+        }
+
+        if (forwardInput == 0 && ActiveThrowingActionkey() && throwBallManager.isAiming)
+        {
+            throwBallManager.ThrowObject();
+            UpdatePlayerStateServerRpc(PlayerState.Throw);
+        }
+
+        AnimatorClipInfo currentAnimation = animator.GetCurrentAnimatorClipInfo(0)[0];
+
+        // Check if the animation is playing
+        if (currentAnimation.clip.name == "Throw2") // Replace "Animation
+        {
+            AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
+
+            if (currentState.normalizedTime >= 1.0f)
+            {
+                UpdatePlayerStateServerRpc(PlayerState.Idle);
+                throwBallManager.ChangeIsThrowingState(false);
+            }
+
+            return;
+        }
+
+        if (throwBallManager.isAiming)
+            return;
 
         // change animation states
         if (forwardInput == 0)
@@ -95,7 +133,6 @@ public class PlayerControl : NetworkBehaviour
             UpdatePlayerStateServerRpc(PlayerState.ReverseWalk);
 
         characterController.SimpleMove(inputPosition * walkSpeed);
-        transform.Rotate(inputRotation * rotationSpeed, Space.World);
     }
 
 
@@ -144,6 +181,9 @@ public class PlayerControl : NetworkBehaviour
             case PlayerState.Throw:
                 animator.SetTrigger("Throw");
                 break;
+            case PlayerState.Aim:
+                animator.SetTrigger("Aim");
+                break;
             default:
                 animator.SetTrigger("Idle");
                 break;
@@ -157,6 +197,7 @@ public class PlayerControl : NetworkBehaviour
         animator.ResetTrigger("ReverseWalk");
         animator.ResetTrigger("Run");
         animator.ResetTrigger("Throw");
+        animator.ResetTrigger("Aim");
         animator.ResetTrigger("Idle");
     }
 }
