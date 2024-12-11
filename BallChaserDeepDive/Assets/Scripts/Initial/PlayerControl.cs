@@ -3,6 +3,7 @@ using System.Globalization;
 using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(NetworkObject))]
 [RequireComponent(typeof(ClientNetworkTransform))]
@@ -53,6 +54,8 @@ public class PlayerControl : NetworkBehaviour
 
     public PlayerRole playerRole;
 
+    public NetworkVariable<int> points = new NetworkVariable<int>(60, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
     private ProjectileThrow projectileThrow;
     private void Awake()
     {
@@ -70,7 +73,6 @@ public class PlayerControl : NetworkBehaviour
             PlayerCameraFollow.Instance.FollowPlayer(transform);
 
             projectileThrow = gameObject.GetComponentInChildren<ProjectileThrow>();
-            //projectileThrow.enabled = true;
         }
     }
 
@@ -80,14 +82,21 @@ public class PlayerControl : NetworkBehaviour
         {
             ClientInput();
             CheckRole();
-            Debug.Log(playerRole);
         }
 
         ClientVisuals();
     }
 
+    public void RestartGame()
+    {
+        points.Value = 60;
+    }
+
     void CheckRole()
     {
+        if (ThrowBallManager.Instance == null)
+            return;
+
         if (ThrowBallManager.Instance.currentChaser != this.gameObject)
         {
             SetToRunner();
@@ -114,7 +123,7 @@ public class PlayerControl : NetworkBehaviour
 
         transform.Rotate(inputRotation * rotationSpeed, Space.World);
 
-        if (playerRole == PlayerRole.Chaser)
+        if (playerRole == PlayerRole.Chaser && ThrowBallManager.Instance.gameStarted.Value)
         {
             if (ActiveAimingActionkey() && !isAiming)
             {
@@ -124,9 +133,8 @@ public class PlayerControl : NetworkBehaviour
 
             if (ActiveThrowingActionkey() && isAiming)
             {
-                projectileThrow.ThrowObject();
                 UpdatePlayerStateServerRpc(PlayerState.Throw);
-                StartCoroutine(HandleThrowAnimation());
+                StartCoroutine(HandleThrow());
             }
 
             if (StopAimingActionKey() && isAiming)
@@ -183,10 +191,10 @@ public class PlayerControl : NetworkBehaviour
         return Input.GetKeyUp(KeyCode.Mouse0);
     }
 
-    private IEnumerator HandleThrowAnimation()
+    private IEnumerator HandleThrow()
     {
-        yield return null;
-
+        yield return new WaitForSeconds(0.25f);
+        projectileThrow.ThrowObject();
         isAiming = false;
         UpdatePlayerStateServerRpc(PlayerState.Idle);
     }
@@ -251,15 +259,26 @@ public class PlayerControl : NetworkBehaviour
         animator.ResetTrigger("ReverseAim");
     }
 
-
-    private void OnTriggerStay(Collider collision)
+    private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.tag == "Ball" && playerRole != PlayerRole.Chaser)
         {
+            Ball ball = collision.gameObject.GetComponent<Ball>();
+
+            // If the ball has already hit a player, stop here
+            if (ball.hasHitPlayer.Value == true)
+            {
+                return;
+            }
+
+            // Process the hit since hasHitPlayer was false
             ulong playerulong = gameObject.GetComponent<NetworkObject>().OwnerClientId;
             playerRole = PlayerRole.Chaser;
             NotifyHitOnServerRpc(playerulong); // Call the ServerRpc
             ThrowBallManager.Instance.SetChaser(playerulong);
+
+            // Set hasHitPlayer to true so the ball can’t trigger another hit
+            ball.hasHitPlayer.Value = true;
         }
     }
 
@@ -275,7 +294,7 @@ public class PlayerControl : NetworkBehaviour
         this.playerRole = PlayerRole.Runner;
         isAiming = false;
 
-        if(lastPlayerState == PlayerState.Aim)
+        if (lastPlayerState == PlayerState.Aim)
             UpdatePlayerStateServerRpc(PlayerState.ReverseAim);
     }
 

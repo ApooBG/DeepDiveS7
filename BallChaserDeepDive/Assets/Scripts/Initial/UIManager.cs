@@ -20,6 +20,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private TMP_InputField joinCodeInput;
 
+    [SerializeField]
+    public TMP_InputField username;
+
     private bool hasServerStarted;
 
     private void Awake()
@@ -37,8 +40,16 @@ public class UIManager : MonoBehaviour
         // START SERVER
         startServerButton?.onClick.AddListener(() =>
         {
+            if (username.text.Length <= 0)
+            {
+                Logger.Instance.LogInfo("Enter your username first...");
+                return;
+            }
             if (NetworkManager.Singleton.StartServer())
+            {
+                HideUI();
                 Logger.Instance.LogInfo("Server started...");
+            }
             else
                 Logger.Instance.LogInfo("Unable to start server...");
         });
@@ -49,11 +60,19 @@ public class UIManager : MonoBehaviour
             // this allows the UnityMultiplayer and UnityMultiplayerRelay scene to work with and without
             // relay features - if the Unity transport is found and is relay protocol then we redirect all the 
             // traffic through the relay, else it just uses a LAN type (UNET) communication.
+            if (username.text.Length <= 0)
+            {
+                Logger.Instance.LogInfo("Enter your username first...");
+                return;
+            }
             if (RelayManager.Instance.IsRelayEnabled)
                 await RelayManager.Instance.SetupRelay();
 
             if (NetworkManager.Singleton.StartHost())
+            {
+                HideUI();
                 Logger.Instance.LogInfo("Host started...");
+            }
             else
                 Logger.Instance.LogInfo("Unable to start host...");
         });
@@ -61,11 +80,19 @@ public class UIManager : MonoBehaviour
         // START CLIENT
         startClientButton?.onClick.AddListener(async () =>
         {
+            if (username.text.Length <= 0)
+            {
+                Logger.Instance.LogInfo("Enter your username first...");
+                return;
+            }
             if (RelayManager.Instance.IsRelayEnabled && !string.IsNullOrEmpty(joinCodeInput.text))
                 await RelayManager.Instance.JoinRelay(joinCodeInput.text);
 
             if (NetworkManager.Singleton.StartClient())
+            {
+                HideUI();
                 Logger.Instance.LogInfo("Client started...");
+            }
             else
                 Logger.Instance.LogInfo("Unable to start client...");
         });
@@ -73,12 +100,25 @@ public class UIManager : MonoBehaviour
         // STATUS TYPE CALLBACKS
         NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
         {
-            Logger.Instance.LogInfo($"{id} just connected...");
+            string username = PlayersManager.Instance.GetPlayerPrefab(id).GetComponentInChildren<PlayerHud>().playerNetworkName.Value;
+            if (username.Length <= 0)
+                Logger.Instance.LogInfo($"Someone just connected...");
+            else
+                Logger.Instance.LogInfo($"{username} just connected...");
         };
 
         NetworkManager.Singleton.OnServerStarted += () =>
         {
             hasServerStarted = true;
         };
+    }
+
+    void HideUI()
+    {
+        startHostButton.gameObject.SetActive(false);
+        startServerButton.gameObject.SetActive(false);
+        startClientButton.gameObject.SetActive(false);
+        joinCodeInput.gameObject.SetActive(false);
+        username.gameObject.SetActive(false);
     }
 }
