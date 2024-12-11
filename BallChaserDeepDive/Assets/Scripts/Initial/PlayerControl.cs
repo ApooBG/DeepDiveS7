@@ -59,6 +59,11 @@ public class PlayerControl : NetworkBehaviour
 
     public NetworkVariable<int> points = new NetworkVariable<int>(60, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+    public NetworkVariable<Color> imageColor = new NetworkVariable<Color>(Color.white);
+
+    public Image image;
+
+
     private bool isThrowing = false;
 
     private ProjectileThrow projectileThrow;
@@ -166,7 +171,7 @@ public class PlayerControl : NetworkBehaviour
         // change animation states
         if (forwardInput == 0)
             UpdatePlayerStateServerRpc(PlayerState.Idle);
-        else if (!ActiveRunningActionKey() && forwardInput > 0 && forwardInput <= 1)
+        else if (!ActiveRunningActionKey() && forwardInput > 0 && forwardInput <= 1 || ActiveRunningActionKey() && forwardInput > 0 && forwardInput <= 1 && playerRole == PlayerRole.Chaser)
             UpdatePlayerStateServerRpc(PlayerState.Walk);
         else if (ActiveRunningActionKey() && forwardInput > 0 && forwardInput <= 1 && playerRole == PlayerRole.Runner)
         {
@@ -226,6 +231,7 @@ public class PlayerControl : NetworkBehaviour
 
     private void ClientVisuals()
     {
+        image.color = imageColor.Value;
         if (networkPlayerState.Value == lastPlayerState)
             return; // Skip if the state hasn't changed.
 
@@ -297,6 +303,7 @@ public class PlayerControl : NetworkBehaviour
         this.projectileThrow.enabled = true;
         this.playerRole = PlayerRole.Chaser;
         fakeBall.SetActive(true);
+        ChangeImageColorServerRpc(new Color(255f, 0f, 0f, 155f / 255f));
     }
 
     void SetToRunner()
@@ -305,6 +312,7 @@ public class PlayerControl : NetworkBehaviour
         this.playerRole = PlayerRole.Runner;
         isAiming = false;
         fakeBall.SetActive(false);
+        ChangeImageColorServerRpc(new Color(0f, 0f, 0f, 155f / 255f));
 
         if (lastPlayerState == PlayerState.Aim)
             UpdatePlayerStateServerRpc(PlayerState.ReverseAim);
@@ -320,6 +328,12 @@ public class PlayerControl : NetworkBehaviour
 
         // Notify all clients about the hit
         NotifyClientsOfHitClientRpc(hitClientId, playerName);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void ChangeImageColorServerRpc(Color color)
+    {
+        imageColor.Value = color;
     }
 
 

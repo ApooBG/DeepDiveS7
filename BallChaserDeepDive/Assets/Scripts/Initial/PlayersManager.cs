@@ -5,6 +5,7 @@ public class PlayersManager : NetworkBehaviour
 {
     private static PlayersManager _instance;
     NetworkVariable<int> playersInGame = new NetworkVariable<int>();
+    public NetworkVariable<NetworkString> JoinCode = new NetworkVariable<NetworkString>();
 
     public static PlayersManager Instance
     {

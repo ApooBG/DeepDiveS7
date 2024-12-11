@@ -1617,6 +1617,9 @@ MonoBehaviour:
   playerRole: 0
   points:
     m_InternalValue: 60
+  imageColor:
+    m_InternalValue: {r: 1, g: 1, b: 1, a: 1}
+  image: {fileID: 4901749727179867039}
 --- !u!95 &3949891825112625266
 Animator:
   serializedVersion: 7

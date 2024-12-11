@@ -33,6 +33,9 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         playersInGameText.text = $"Players in game: {PlayersManager.Instance.PlayersInGame}";
+
+        if (PlayersManager.Instance.JoinCode.Value != "")
+        playersInGameText.text = $"Players in game: {PlayersManager.Instance.PlayersInGame} \n {PlayersManager.Instance.JoinCode.Value}";
     }
 
     void Start()

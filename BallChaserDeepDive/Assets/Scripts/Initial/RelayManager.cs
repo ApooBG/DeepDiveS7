@@ -91,6 +91,7 @@ public class RelayManager : MonoBehaviour
                 relayHostData.Key, relayHostData.ConnectionData);
 
         Logger.Instance.LogInfo($"Relay Server Generated Join Code: {relayHostData.JoinCode}");
+        PlayersManager.Instance.JoinCode.Value = relayHostData.JoinCode;
 
         return relayHostData;
     }
