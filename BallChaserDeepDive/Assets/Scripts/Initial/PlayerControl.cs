@@ -32,13 +32,16 @@ public class PlayerControl : NetworkBehaviour
     private float walkSpeed = 3.5f;
 
     [SerializeField]
+    private GameObject fakeBall;
+
+    [SerializeField]
     private float runSpeedOffset = 2.0f;
 
     [SerializeField]
     private float rotationSpeed = 3.5f;
 
     [SerializeField]
-    private bool isAiming = false;
+    public bool isAiming = false;
 
     [SerializeField]
     private Vector2 defaultInitialPlanePosition = new Vector2(-4, 4);
@@ -55,6 +58,8 @@ public class PlayerControl : NetworkBehaviour
     public PlayerRole playerRole;
 
     public NetworkVariable<int> points = new NetworkVariable<int>(60, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    private bool isThrowing = false;
 
     private ProjectileThrow projectileThrow;
     private void Awake()
@@ -131,11 +136,15 @@ public class PlayerControl : NetworkBehaviour
                 isAiming = true;
             }
 
-            if (ActiveThrowingActionkey() && isAiming)
+            if (ActiveThrowingActionkey() && isAiming && !isThrowing)
             {
+                isThrowing = true;
                 UpdatePlayerStateServerRpc(PlayerState.Throw);
                 StartCoroutine(HandleThrow());
             }
+
+            if (isThrowing)
+                fakeBall.SetActive(false);
 
             if (StopAimingActionKey() && isAiming)
             {
@@ -159,7 +168,7 @@ public class PlayerControl : NetworkBehaviour
             UpdatePlayerStateServerRpc(PlayerState.Idle);
         else if (!ActiveRunningActionKey() && forwardInput > 0 && forwardInput <= 1)
             UpdatePlayerStateServerRpc(PlayerState.Walk);
-        else if (ActiveRunningActionKey() && forwardInput > 0 && forwardInput <= 1)
+        else if (ActiveRunningActionKey() && forwardInput > 0 && forwardInput <= 1 && playerRole == PlayerRole.Runner)
         {
             inputPosition = direction * runSpeedOffset;
             UpdatePlayerStateServerRpc(PlayerState.Run);
@@ -196,6 +205,7 @@ public class PlayerControl : NetworkBehaviour
         yield return new WaitForSeconds(0.25f);
         projectileThrow.ThrowObject();
         isAiming = false;
+        isThrowing = false;
         UpdatePlayerStateServerRpc(PlayerState.Idle);
     }
 
@@ -286,6 +296,7 @@ public class PlayerControl : NetworkBehaviour
     {
         this.projectileThrow.enabled = true;
         this.playerRole = PlayerRole.Chaser;
+        fakeBall.SetActive(true);
     }
 
     void SetToRunner()
@@ -293,6 +304,7 @@ public class PlayerControl : NetworkBehaviour
         this.projectileThrow.enabled = false;
         this.playerRole = PlayerRole.Runner;
         isAiming = false;
+        fakeBall.SetActive(false);
 
         if (lastPlayerState == PlayerState.Aim)
             UpdatePlayerStateServerRpc(PlayerState.ReverseAim);

@@ -45,8 +45,16 @@ public class ProjectileThrow : NetworkBehaviour
     {
         if (IsClient && IsOwner)
         {
-            HandleForceChange();
-            Predict();
+            lineRenderer.enabled = false;
+            if (gameObject.transform.parent.GetComponent <PlayerControl>().playerRole == PlayerControl.PlayerRole.Chaser)
+            {
+                if (gameObject.transform.parent.GetComponent<PlayerControl>().isAiming)
+                {
+                    lineRenderer.enabled = true;
+                    HandleForceChange();
+                    Predict();
+                }
+            }
         }
     }
 

@@ -25,4 +25,9 @@ public class PlayerCameraFollow : MonoBehaviour
     {
         cinemachineVirtualCamera.Follow = transform;
     }
+
+    public Transform GetCameraTransform()
+    {
+        return cinemachineVirtualCamera.gameObject.transform;
+    }
 }
