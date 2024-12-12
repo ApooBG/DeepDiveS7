@@ -6,9 +6,6 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
-    private Button startServerButton;
-
-    [SerializeField]
     private Button startHostButton;
 
     [SerializeField]
@@ -40,23 +37,6 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        // START SERVER
-        startServerButton?.onClick.AddListener(() =>
-        {
-            if (username.text.Length <= 0)
-            {
-                Logger.Instance.LogInfo("Enter your username first...");
-                return;
-            }
-            if (NetworkManager.Singleton.StartServer())
-            {
-                HideUI();
-                Logger.Instance.LogInfo("Server started...");
-            }
-            else
-                Logger.Instance.LogInfo("Unable to start server...");
-        });
-
         // START HOST
         startHostButton?.onClick.AddListener(async () =>
         {
@@ -119,7 +99,6 @@ public class UIManager : MonoBehaviour
     void HideUI()
     {
         startHostButton.gameObject.SetActive(false);
-        startServerButton.gameObject.SetActive(false);
         startClientButton.gameObject.SetActive(false);
         joinCodeInput.gameObject.SetActive(false);
         username.gameObject.SetActive(false);
