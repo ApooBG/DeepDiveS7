@@ -35,6 +35,7 @@ https://docs-multiplayer.unity3d.com/tools/current/porting-to-dgs/ and watch thi
   - [Sources](#sources)
   - [License](#license)
   - [Visuals](#visuals)
+  - [Conclusion](#conclusion)
 
 # **How and What to Test**
 ### **Create and Join a Session**
@@ -151,7 +152,7 @@ As much as I would like to say that this sandbox is perfect -- it's not. Unity h
 ### **License**
 This project is licensed under the [MIT License](LICENSE).
 
-### **Visuals***
+### **Visuals**
 ...
 
 ### **Conclusion**
