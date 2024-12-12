@@ -58,7 +58,21 @@ I started with creating the UI elements necessary for player login, role selecti
 Real-Time Synchronization of Animation, Position, and Rotation:
 After implementing the basic multiplayer connection logic, I focused on syncing player positions, rotations, and animations in real-time. This ensured that when one player moved or changed animation states, all other players saw those changes smoothly and consistently.
 
-#Future Improvements
+### Scripts
++ **CanvasFaceCamera.cs** - Attached to the player canvas, this script finds the PlayerCameraFollow script and makes this canvas to always look towards the camera. 
++ **Logger.cs** - Attached to the logger gameObject. This script is used to log game states like if someone has joined the session. You will find the Logger's instance called in almost every script. 
++ **PlayercameraFollow.cs** - Attched to the camera component, this script makes use of a cinemachine and makes it possible for the cinemachine to follow the player. 
++ **PlayerControl.cs** - Attached to the player prefab gameObject. This script is used to catch the player's information and sync it with the server. That includes position, rotation, animation and anything else that you might need in the process of creating your game.
++ **PlayerHud.cs** - Attached to the UIComponent of the player. This script stores the username that the player has chosen and updates the textbox across all clients.
++ **PlayersManager.cs** - Attached to a gameObject called PlayersManager. This script manages the number of the players as well as can be accessed to get the player prefab according to their ID.
++ **UIManager.cs** - Attached to the UI Canvas for all players. This script allows to start host / join game with set up username and relay code.
++ **RelayManager.cs** - Attached to a gameObject called RelayManager. This script is downloaded from the unity docs. about Relay.
++ **SpawnerControl.cs** - This script is attached to a scene gameObject called NetworkObjectPool. It makes it possible for the server to initialize pool of the objectPrefab and spawn it when needed.
++ **NetworkString.cs** - Copied from Unity Docs. this script allows to store a string in a network variable and get it.
++ **NetworkObjectPool.cs** - Attached to gameobject called NetworkObjectPool and copied from an open source, this script allows to create object pooling from the server side.
+
+
+# Future Improvements
 Further refine interpolation and prediction to reduce latency-induced jitter.
 Implement more complex game logic on the server, such as scoring and power-ups.
 Integrate a more robust relay and lobby system for easier matchmaking.
