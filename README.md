@@ -2,9 +2,10 @@
 ### **Introduction**
 I dived deep into **Multiplayer with NetCode for GameObjects in Unity**. In this GitHub repository, you will find three branches, including this one:
 
-+ **main** - A multiplayer sandbox that allows you to create or join a session. It synchronizes players' movement, rotation, and animation of the `playerPrefab`.
-+ **BallThrowGame** - Building upon the main branch, I extended it into creating a ball-throwing game, which is also my full deep dive.
-+ **build** - Use this branch to get the build of the BallThrower game.
++ **main** - Use this branch to get the build of the BallThrower game.
++ **multiplayerSandbox** - A multiplayer sandbox that allows you to create or join a session. It synchronizes players' movement, rotation, and animation of the `playerPrefab`.
++ **BallThrowGame** - Building upon the multiplayerSandbox branch, I extended it into creating a ball-throwing game, which is also my full deep dive. The build for this can be found in the main branch.
+
 
 In this README file, you will find:
 
