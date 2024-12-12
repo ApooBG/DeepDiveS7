@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class ThrowBallManager : NetworkBehaviour
 {
+    /* 
+        The script is attached to a gameObject called ThrowBallManager. This script handles the whole game logic of the ThrowBall game.
+    */
     private static ThrowBallManager _instance;
     public GameObject currentChaser;
     public NetworkVariable<ulong> currentChaserulong;
@@ -30,37 +33,37 @@ public class ThrowBallManager : NetworkBehaviour
     {
         if (IsClient)
         {
-            gameStarted.Value = false;
+            gameStarted.Value = false; //make sure that the gameStarted is false for every client at first
         }
     }
 
     void Update()
     {
-        if (IsServer && currentChaser == null && ThrowBallManager.Instance != null)
+        if (IsServer && currentChaser == null && ThrowBallManager.Instance != null) //if chaser is null, make the server to set one
         {
             SetChaser(ChooseRandomPlayer());
         }
 
-        if (IsClient)
+        if (IsClient) //through the client check if the chaser is changed
         {
             CheckIfChaserIsChanged();
         }
-        if (IsServer)
+        if (IsServer) //game logic that the server handles
             Game();
     }
 
-    public void SetChaser(ulong clientId)
+    public void SetChaser(ulong clientId) //set new chaser
     {
-        if (currentChaser != null)
+        if (currentChaser != null) //if current chaser is not null, make him to be a runner
         {
             UpdateToRunnerServerRpc();
         }
 
-        UpdateVariablesServerRpc(clientId);
-        GameObject player = PlayersManager.Instance.GetPlayerPrefab(clientId);
+        UpdateVariablesServerRpc(clientId); //make the passed client to be a chaser
+        GameObject player = PlayersManager.Instance.GetPlayerPrefab(clientId); //if you need to do anything with that player here you can get the game object of the new chaser
     }
 
-    public ulong ChooseRandomPlayer()
+    public ulong ChooseRandomPlayer() //chooses a random player and makes them the chaser when the game starts
     {
         var connectedClients = NetworkManager.Singleton.ConnectedClientsList;
         if (connectedClients.Count == 0)
@@ -74,7 +77,7 @@ public class ThrowBallManager : NetworkBehaviour
         return chosenClientId;
     }
 
-    public List<GameObject> GetAllPlayers()
+    public List<GameObject> GetAllPlayers() //gets a list of all players that are in the lobby
     {
         var connectedClients = NetworkManager.Singleton.ConnectedClientsList;
         if (connectedClients.Count == 0)
@@ -93,7 +96,7 @@ public class ThrowBallManager : NetworkBehaviour
     }
 
 
-    private void CheckIfChaserIsChanged()
+    private void CheckIfChaserIsChanged() //checks if the chaser is changed and sets the correct roles through the server
     {
         GameObject player = PlayersManager.Instance.GetPlayerPrefab(currentChaserulong.Value);
 
@@ -106,34 +109,33 @@ public class ThrowBallManager : NetworkBehaviour
         }
     }
 
-    public void StartGame()
+    public void StartGame() //starts game when called
     {
         UpdateGameStartedServerRpc(true);
     }
 
-    public void SetGame()
+    public void SetGame() //sets a new game when called
     {
         UpdateGameStartedServerRpc(true);
-        timerRunning = false;
+        timerRunning = false; 
         secondLeft.Value = 60;
 
         foreach (GameObject player in GetAllPlayers())
         {
-            player.GetComponent<PlayerControl>().RestartGame();
+            player.GetComponent<PlayerControl>().RestartGame(); //restart the game 
         }
     }
 
     void Game()
     {
-        if (gameStarted.Value && !timerRunning)
+        if (gameStarted.Value && !timerRunning) //if the game is running and the timer hasn't started
         {
-            timerRunning = true;
-            StartCoroutine(TimerGoesDownLoop());
+            timerRunning = true; //make the timer to start
+            StartCoroutine(TimerGoesDownLoop()); //actually start the timer
         }
     }
 
-    // A single coroutine that runs the entire countdown
-    private IEnumerator TimerGoesDownLoop()
+    private IEnumerator TimerGoesDownLoop() //for the chaser reduce 1 point and timer too
     {
         while (secondLeft.Value >= 0)
         {
@@ -159,7 +161,7 @@ public class ThrowBallManager : NetworkBehaviour
         timerRunning = false;
     }
 
-    public string GetLeaderboard()
+    public string GetLeaderboard() //get leaderboard string by ordering the players by points
     {
         string s = "";
         List<GameObject> playerList = GetAllPlayers();
@@ -191,13 +193,13 @@ public class ThrowBallManager : NetworkBehaviour
 
 
     [ServerRpc(RequireOwnership = false)]
-    private void UpdateVariablesServerRpc(ulong clientId)
+    private void UpdateVariablesServerRpc(ulong clientId) //set a new chaser
     {
         currentChaserulong.Value = clientId;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void UpdateToRunnerServerRpc()
+    private void UpdateToRunnerServerRpc() //set a new runner
     {
         currentChaser.GetComponent<PlayerControl>().playerRole = PlayerControl.PlayerRole.Runner;
         ProjectileThrow pt = currentChaser.GetComponentInChildren<ProjectileThrow>();
@@ -206,7 +208,7 @@ public class ThrowBallManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void UpdateGameStartedServerRpc(bool value)
+    private void UpdateGameStartedServerRpc(bool value) //update game started value 
     {
         gameStarted.Value = value;
         if (value)
@@ -215,7 +217,7 @@ public class ThrowBallManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void UpdateSecondsLeftValueServerRpc(int seconds)
+    private void UpdateSecondsLeftValueServerRpc(int seconds) //update the seconds left value
     {
         secondLeft.Value = seconds;
     }

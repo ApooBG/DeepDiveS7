@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PlayersManager : NetworkBehaviour
 {
+    /*
+        Attached to a gameObject called PlayersManager.
+        This script manages the number of the players as well as can be accessed to get the player prefab according to their ID.
+    */
     private static PlayersManager _instance;
     NetworkVariable<int> playersInGame = new NetworkVariable<int>();
     public NetworkVariable<NetworkString> JoinCode = new NetworkVariable<NetworkString>();

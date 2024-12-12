@@ -34,13 +34,17 @@ public struct RelayJoinData
 
 public class RelayManager : MonoBehaviour
 {
+    /* 
+        Attached to a gameObject called RelayManager.
+        This script is downloaded from the unity docs. about Relay.
+    */
     private static RelayManager _instance;
 
     [SerializeField]
-    private string environment = "production";
+    private string environment = "production"; //name of the environment in the relay setup
 
     [SerializeField]
-    private int maxNumberOfConnections = 10;
+    private int maxNumberOfConnections = 10; //max number of connections set in the relay setup
 
     public bool IsRelayEnabled => Transport != null && Transport.Protocol == UnityTransport.ProtocolType.RelayUnityTransport;
 

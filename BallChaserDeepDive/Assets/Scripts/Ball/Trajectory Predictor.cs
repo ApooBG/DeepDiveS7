@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class TrajectoryPredictor : MonoBehaviour
 {
+    /*
+        This script is attached to the same place as ProjectileThrow.cs and is to make a raycast of the ball's throw prediction.
+    */
     #region Members
     LineRenderer trajectoryLine;
     [SerializeField, Range(10, 100), Tooltip("The maximum number of points the LineRenderer can have")]

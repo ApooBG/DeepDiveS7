@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class ProjectileThrow : NetworkBehaviour
 {
+    /*
+        This script is attached to the player's child object which position is used to spawn balls on throw. 
+        The script is used to call the ball prediction and also to change the throw's force. It also handles spawning new balls.
+    */
     TrajectoryPredictor trajectoryPredictor;
     LineRenderer lineRenderer;
 
@@ -41,9 +45,10 @@ public class ProjectileThrow : NetworkBehaviour
         };
     }
 
+    //if the player is the one that owns this object and is a client, then check if their role is chaser and if they are aiming, and show the prediction, also enable the force change
     void Update()
     {
-        if (IsClient && IsOwner)
+        if (IsClient && IsOwner) 
         {
             lineRenderer.enabled = false;
             if (gameObject.transform.parent.GetComponent <PlayerControl>().playerRole == PlayerControl.PlayerRole.Chaser)
@@ -58,7 +63,7 @@ public class ProjectileThrow : NetworkBehaviour
         }
     }
 
-
+    //predicting the ball's movement based on the data
     public void Predict()
     {
         trajectoryPredictor.PredictTrajectory(ProjectileData());
@@ -84,7 +89,7 @@ public class ProjectileThrow : NetworkBehaviour
 
         return properties;
     }
-
+    
     void HandleForceChange()
     {
         float scrollInput = Input.GetAxis("Mouse ScrollWheel"); // Get the scroll wheel input
@@ -104,14 +109,16 @@ public class ProjectileThrow : NetworkBehaviour
             Debug.Log("No Scroll Input Detected");
         }
     }
+
     public void ThrowObject()
     {
-        if (IsClient)
+        if (IsClient) //if its a client and this method was called, then request the server to spawn a ball on this gameObject's position
         {
             RequestBallSpawnServerRpc(gameObject.transform.position, force);
         }
     }
 
+    //request the server to spawn a ball, adding it force and changing the ownership of the ball's network object just to make sure that it works as intended
     [ServerRpc(RequireOwnership = false)]
     private void RequestBallSpawnServerRpc(Vector3 spawnPosition, float clientForce, ServerRpcParams rpcParams = default)
     {
@@ -140,6 +147,7 @@ public class ProjectileThrow : NetworkBehaviour
         SetActiveOnServerRpc(nextBall.GetComponent<NetworkObject>().NetworkObjectId, true);
     }
 
+    //notifying the clients that the ball is ready for launch
     [ClientRpc]
     private void NotifyClientBallReadyClientRpc(ulong ballNetworkId, ulong clientId)
     {
@@ -152,7 +160,7 @@ public class ProjectileThrow : NetworkBehaviour
         }
     }
 
-
+    //make the ball visible through the server
     [ServerRpc(RequireOwnership = false)]
     void SetActiveOnServerRpc(ulong networkObjectId, bool isActive)
     {
@@ -165,6 +173,7 @@ public class ProjectileThrow : NetworkBehaviour
         }
     }
 
+    //make the ball visible through the client
     [ClientRpc]
     void SetActiveOnClientRpc(ulong networkObjectId, bool isActive)
     {

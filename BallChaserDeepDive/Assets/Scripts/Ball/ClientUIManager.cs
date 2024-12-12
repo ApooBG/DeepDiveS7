@@ -6,6 +6,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class ClientUIManager : NetworkBehaviour
 {
+    /* 
+        Attached to the clientUI this script is used to make references to the client UI components. 
+    */
     [SerializeField]
     TextMeshProUGUI leaderboard;
 

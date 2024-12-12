@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class HostUIManager : NetworkBehaviour
 {
+    /*
+        Attached to the hostUI this script is used to make references to the host UI components. 
+    */
     [SerializeField]
     private Button startGame;
 

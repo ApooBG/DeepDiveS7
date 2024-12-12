@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/* 
+    A class that's used to store properties. No gameObject attachment.
+*/
 public struct ProjectileProperties
 {
     public Vector3 direction;
