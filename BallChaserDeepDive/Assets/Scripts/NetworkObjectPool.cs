@@ -7,6 +7,7 @@ using UnityEngine.Assertions;
 
 namespace Netcode.Extensions
 {
+    // Attached to gameobject called NetworkObjectPool and copied from an open source, this script allows to create object pooling from the server side.
     /// <summary>
     /// Object Pool for networked objects, used for controlling how objects are spawned by Netcode. Netcode by default will allocate new memory when spawning new
     /// objects. With this Networked Pool, we're using custom spawning to reuse objects.

@@ -3,6 +3,10 @@ using Unity.Netcode;
 using UnityEngine;
 public class SpawnerControl : NetworkBehaviour
 {
+    /* 
+        This script is attached to a scene gameObject called NetworkObjectPool.
+        It makes it possible for the server to initialize pool of the objectPrefab and spawn it when needed.
+    */
     private static SpawnerControl _instance;
 
     [SerializeField]
@@ -22,6 +26,7 @@ public class SpawnerControl : NetworkBehaviour
 
     private void Awake()
     {
+        //initialize the pool
         NetworkManager.Singleton.OnServerStarted += () =>
         {
             NetworkObjectPool.Singleton.InitializePool();
@@ -34,6 +39,7 @@ public class SpawnerControl : NetworkBehaviour
         // Your update logic here
     }
 
+    //only the server can spawn from the pool.
     public GameObject SpawnObject(Vector3 position)
     {
         if (!IsServer) return null;
@@ -41,7 +47,7 @@ public class SpawnerControl : NetworkBehaviour
         GameObject go = NetworkObjectPool.Singleton.GetNetworkObject(objectPrefab).gameObject;
         go.transform.position = position;
         go.transform.rotation = Quaternion.identity;
-        go.GetComponent<NetworkObject>().Spawn();
+        go.GetComponent<NetworkObject>().Spawn(); //without this, the pool doesn't work
         return go;
     }
 }

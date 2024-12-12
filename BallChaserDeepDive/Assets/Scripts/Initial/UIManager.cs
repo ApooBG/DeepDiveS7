@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    /*
+        Attached to the UI Canvas for all players.
+        This script allows to start host / join game with set up username and relay code. 
+    */
     [SerializeField]
     private Button startHostButton;
 
@@ -96,6 +100,7 @@ public class UIManager : MonoBehaviour
         };
     }
 
+    //hides the UI on joining session
     void HideUI()
     {
         startHostButton.gameObject.SetActive(false);

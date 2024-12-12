@@ -5,6 +5,10 @@ using System.Linq;
 
 public class Logger : MonoBehaviour
 {
+    /*
+        Attached to the logger gameObject.
+        This script is used to log game states like if someone has joined the session. You will find the Logger's instance called in almost every script. 
+    */
     private static Logger _instance;
     [SerializeField]
     private TextMeshProUGUI debugAreaText = null;

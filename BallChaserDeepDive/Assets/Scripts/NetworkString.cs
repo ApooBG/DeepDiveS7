@@ -3,6 +3,9 @@ using Unity.Netcode;
 
 public struct NetworkString : INetworkSerializable
 {
+    /*
+        Copied from Unity Docs. this script allows to store a string in a network variable and get it.
+    */
     private FixedString32Bytes info;
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
