@@ -156,6 +156,7 @@ As much as I would like to say that this sandbox is perfect -- it's not. Unity h
 This project is licensed under the [MIT License](LICENSE).
 
 ### **Visuals**
+(click on the image to open youtube.com)
 [![Video of the game](./thumbnail.png)](https://youtu.be/8UJjUYNnoNQ)
 
 ### **Conclusion**
