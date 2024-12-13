@@ -1,7 +1,9 @@
 # Introduction to Deep Dive S7
 ### **Introduction**
-I dived deep into **Multiplayer with NetCode for GameObjects in Unity**. In this GitHub repository, you will find three branches, including this one:
+I dived deep into **Multiplayer with NetCode for GameObjects in Unity**. I made a multiplayer sandbox, which everyone can learn to make and use, and expanded that into a ball throwing game. Please, read the [Game Rules](#game-rules) and watch the video [Visuals](#visuals).
 
+
+In this GitHub repository, you will find three branches, including this one:
 + **main** - Use this branch to get the build of the BallThrower game.
 + **multiplayerSandbox** - A multiplayer sandbox that allows you to create or join a session. It synchronizes players' movement, rotation, and animation of the `playerPrefab`.
 + **BallThrowGame** - Building upon the multiplayerSandbox branch, I extended it into creating a ball-throwing game, which is also my full deep dive. The build for this can be found in the main branch.
@@ -46,7 +48,7 @@ To see the results of my Deep Dive project, you have to pull from the **build** 
 On the bottom left, you will see two buttons - **Start Game** and **Console**, and at the middle-top of the screen, you will find the code for your lobby. Anyone who wants to connect to your game must enter their nickname and the join code, then click on **Start Client**. Once everyone has joined, you can click on **Start Game**.
 
 ### **Game Rules**
-After the game starts, a **chaser** is randomly chosen, while everyone else becomes a **runner**. Each second a player remains a runner, they receive a -1 point deduction. The leaderboard is visible on the right. To become a runner, the chaser must hit someone with a ball, after which they switch places. Chasers cannot run and cannot walk while aiming. Each game lasts 60 seconds. At the end, you can click on **Start Game** to restart. The player with the most points wins.
+After the game starts, a **chaser** is randomly chosen, while everyone else becomes a **runner**. Each second a player remains a chaser, they receive a -1 point deduction. The leaderboard is visible on the right. To become a runner, the chaser must hit someone with a ball, after which they switch places. Chasers cannot run and cannot walk while aiming. Each game lasts 60 seconds. At the end, you can click on **Start Game** to restart. The player with the most points wins.
 
 ### **Controls**
 - **WASD / Arrows** - Movement
@@ -154,7 +156,7 @@ As much as I would like to say that this sandbox is perfect -- it's not. Unity h
 This project is licensed under the [MIT License](LICENSE).
 
 ### **Visuals**
-...
+[![Video of the game](https://raw.githubusercontent.com/username/repository/branch/path/to/thumbnail.png)](https://youtu.be/8UJjUYNnoNQ)
 
 ### **Conclusion**
 In conclusion, I think this has been a really good learning experience for me, and I believe that if you take the time to create a game and apply all of this, then you will certainly understand multiplayer better than you did before that. My game didn't turn out to be great, but my multiplayer environment works, and I found a few mistakes in the code and setup, which is a truly valuable learning experience.
