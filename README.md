@@ -156,7 +156,7 @@ As much as I would like to say that this sandbox is perfect -- it's not. Unity h
 This project is licensed under the [MIT License](LICENSE).
 
 ### **Visuals**
-[![Video of the game](https://raw.githubusercontent.com/username/repository/branch/path/to/thumbnail.png)](https://youtu.be/8UJjUYNnoNQ)
+[![Video of the game](./thumbnail.png)](https://youtu.be/8UJjUYNnoNQ)
 
 ### **Conclusion**
 In conclusion, I think this has been a really good learning experience for me, and I believe that if you take the time to create a game and apply all of this, then you will certainly understand multiplayer better than you did before that. My game didn't turn out to be great, but my multiplayer environment works, and I found a few mistakes in the code and setup, which is a truly valuable learning experience.
