@@ -114,11 +114,11 @@ This entire game was created solely to apply the multiplayer concepts I have lea
 + **NetworkBehaviour** - specialized version of ```MonoBehaviour``` that includes networking capabilities. Used in scripts that need to interact with the network. For example Ball.cs, HostUIManager.cs, ThrowBallManager.cs etc.
 + **NetworkManager** - responsible for managing network sessions, handling connections, and coordinating the overall networking process. Luckily, Unity creates this one for you, so all you need to know is that you can access it as a gameObject on the scene and all of the server settings can be managed from there.
 + **IsClient, IsOwner, IsHost, IsServer** - the thing that you need to understand about these is that they are very important to be set correctly. In my case with the ball, I didn't do it the best way possible, making it possible for hackers to manipulate a lot on the server side, but giving the context it was all right for me. Usually you don't want to trigger server side of things through the client. 
-1) ```**if(IsServer)**``` - will be true only if the server triggers this (false for client and for host).
-2) ```**if(IsHost)**``` - will be true only if the client who hosts the server triggers this (false for server and for host).
-3) ```**if(IsClient)**``` - will be true only if a client triggers this (false for server, but for the host this is true).
-4) ```**if(IsOwner)**``` - will be true only if the client that triggered this owns the game object that has this scripted attached to (false for server, but can be true for client and host, depending if they own the object, otherwise its false).
-5) When you combine ```if (IsClient && IsOwner)``` it will be only true if the one who owns that character executes it, but you are making sure that the server for some reason doesn't execute it (but that's for a bit more advanced stuff, however, it's good to have it in practice).
+    1) ```**if(IsServer)**``` - will be true only if the server triggers this (false for client and for host).
+    2) ```**if(IsHost)**``` - will be true only if the client who hosts the server triggers this (false for server and for host).
+    3) ```**if(IsClient)**``` - will be true only if a client triggers this (false for server, but for the host this is true).
+    4) ```**if(IsOwner)**``` - will be true only if the client that triggered this owns the game object that has this scripted attached to (false for server, but can be true for client and host, depending if they own the object, otherwise its false).
+    5) When you combine ```if (IsClient && IsOwner)``` it will be only true if the one who owns that character executes it, but you are making sure that the server for some reason doesn't execute it (but that's for a bit more advanced stuff, however, it's good to have it in practice).
 
 + **ServerRpc** - allows clients to send requests or data to the server, those methods require the naming to end with: *ServerRpc. You can see some examples of them in the ThrowBallManager.cs.
 + **ClientRpc** - allows the server to send messages or data to all clients. You usually want to use this template: Client4 does something -> notifies the server through ServerRpc that is in his own IsOwner script -> that ServerRpc notifies the ClientRpc method which updates to all Client1, Client2, Client3, Client4.
