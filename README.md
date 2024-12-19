@@ -31,7 +31,7 @@ https://docs-multiplayer.unity3d.com/tools/current/porting-to-dgs/ and watch thi
 - [What I Learned](#what-i-learned)
 - [What I Did and Instructions](#what-i-did-and-instructions)
   - [Scripts](#scripts)
-  - [Methodology and Understanding of Unity NetCode](#methodology-and-understanding-of-unity-netcode)
+  - [Terminology and Understanding of Unity NetCode](#terminology-and-understanding-of-unity-netcode)
   - [Instructions to the Sandbox Creation from Scratch](#instructions-to-the-sandbox-creation-from-scratch)
 - [Conclusion](#conclusion)
   - [Future Improvements](#future-improvements)
@@ -111,7 +111,7 @@ This entire game was created solely to apply the multiplayer concepts I have lea
 + **ThrowBallManager.cs** - Attached to a GameObject called `ThrowBallManager`. This script manages the entire game logic of the ThrowBall game.
 + **TrajectoryPredictor.cs** - Attached alongside `ProjectileThrow.cs`. This script performs a raycast for ball throw prediction.
 
-### **Methodology and Understanding of Unity NetCode**
+### **Terminology and Understanding of Unity NetCode**
 + **NetworkObject** - the fundamental building block in Unity's NetCode. It represents any GameObject that needs to be synchronized across the network. In this case it is the player and the ball, as other things like walls, furniture, nature etc. are static and do not need synchronization (that excludes anything the game might interact with like opening/closing doors, moving chairs, destroying walls etc.).
 + **NetworkBehaviour** - specialized version of ```MonoBehaviour``` that includes networking capabilities. Used in scripts that need to interact with the network. For example Ball.cs, HostUIManager.cs, ThrowBallManager.cs etc.
 + **NetworkManager** - responsible for managing network sessions, handling connections, and coordinating the overall networking process. Luckily, Unity creates this one for you, so all you need to know is that you can access it as a gameObject on the scene and all of the server settings can be managed from there.
