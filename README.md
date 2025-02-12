@@ -140,51 +140,38 @@ Instructions:
 
 2) Install packages: Window -> Multiplayer -> Multiplayer Center
 
-![IMAGE](Images/DD2.png)
+![IMAGE](Images/FirstStep.png)
 
 3) Install the basic Unity scene -> Multiplayer Center -> Quickstart at the top -> NetCode and Tools -> Under NetCode for GameObjects click on Create and open scene with NetCode setup
 
-
+![IMAGE](Images/DD2.png)
 
 4) A new scene will open containing a temporary UI with buttons to start host/client, NetworkManager and cube player prefab. The prefab is location in Assets -> NGO_Minimal_Setup folder
 
-5) We have a working multiplayer environment [VIDEO] (imgur.com), but why does it work? Looking at the player prefab, it has:
-
-Network object
-
-Client Network Transform
-
-Client Authoritive Movement: basic movement script but there is a condition to the execution:if (!IsOwner || !IsSpawned) return;
-
-Set Color Based On Owner Id
+5) We have a working multiplayer environment [VIDEO](https://imgur.com/0fR7JMe), but why does it work? Looking at the player prefab, it has:
+  - Network object
+  - Client Network Transform
+  - Client Authoritive Movement: basic movement script but there is a condition to the execution:if (!IsOwner || !IsSpawned) return;
+  - Set Color Based On Owner Id
 
 6) Delete the TemporaryUI and use the prefab I have prepared (or create your own, no difference for multiplayer). It has:
+  - Start Host button
+  - Input field for the join code
+  - Start client button
+  - Execute physics button
+  - Players in game text mesh pro
+  - Console text mesh pro
+  - Image as a background for the console tmp
 
-Start Host button
-
-Input field for the join code
-
-Start client button
-
-Execute physics button
-
-Players in game text mesh pro
-
-Console text mesh pro
-
-Image as a background for the console tmp
-
-7) Add these scripts into your project: [SCRIPT] Logger.cs [DD7], [SCRIPT] PlayersManager.cs [DD7], [SCRIPT] RelayManager.cs [DD7], [SCRIPT] UIManager.cs [DD7],[SCRIPT] PlayerCameraFollow.cs [DD7], [SCRIPT] PlayerControl.cs (sandbox) [DD7]. You will get an error for missing a cinemachine, to fix it go to Window -> Package Manager -> Unity Registry -> type Cinemachine and install it into te project. Current version 3.1.2.
+7) Add these scripts into your project: Logger.cs, PlayersManager.cs, RelayManager.cs, UIManager.cs, PlayerCameraFollow.cs, PlayerControl.cs. You will get an error for missing a cinemachine, to fix it go to Window -> Package Manager -> Unity Registry -> type Cinemachine and install it into te project. Current version 3.1.2.
 
 8) Attach the UIManager to the canvas and reference the buttons
 
 9) Attach the Logger.cs where you want fit and reference your tmp and enable debugging checkbox. I attached it to the UI -> LoggerConsole.
 
 10) Use the playerprefab that I have given access to and replace the cube prefab or add your own prefab.
-
-Add the player prefab
-
-Attach these components to it: Network Object, Client Network Transform and Character Controller
+  - Add the player prefab
+  - Attach these components to it: Network Object, Client Network Transform and Character Controller
 
 11) Add the PlayerControl script to the player prefab.
 
@@ -204,21 +191,18 @@ Attach these components to it: Network Object, Client Network Transform and Char
 
 19) Add a plane in the scene and position it at 0,-2,0.
 
-20) [VIDEO] (youtube.com) - players position is getting updated across all clients.
+20) [VIDEO](https://imgur.com/57FBdwC) - players position is getting updated across all clients.
 
 21) For the animations you can copy the animator that I have in my project but to create your own, you need:
+  - Add 4 triggers in the animator: Idle, Walk, ReverseWalk, Run
+  - Add 4 states in the animator for each trigger and reference the correct animation. (for the reverse walk you can just reference the walking animation and set the speed to -1)
+  - Each state has to be connect with every single one of them, disable the "Has Exit Time" for every connection arrow and add the right condition (if the arrow goes from Idle to walk, the condition should be "Walk" etc.)
 
-Add 4 triggers in the animator: Idle, Walk, ReverseWalk, Run
+![IMAGE](Images/dd4.png)
 
-Add 4 states in the animator for each trigger and reference the correct animation. (for the reverse walk you can just reference the walking animation and set the speed to -1)
+22) [VIDEO](https://imgur.com/V923gX0), animation are now working since we have the NetworkVariable and ServerRpc method to update it for all clients.
 
-Each state has to be connect with every single one of them, disable the "Has Exit Time" for every connection arrow and add the right condition (if the arrow goes from Idle to walk, the condition should be "Walk" etc.)
-
-
-
-22) [VIDEO] (youtube.com), animation are now working since we have the NetworkVariable and ServerRpc method to update it for all clients.
-
-23) To setup an object pooling, you have to add these two scripts into your project: [SCRIPT] NetworkObjectPool.cs [DD7] and [SCRIPT] SpawnerControl.cs [DD7].
+23) To setup an object pooling, you have to add these two scripts into your project: NetworkObjectPool.cs and SpawnerControl.cs.
 
 24) Create a normal ball/sphere, add a NetworkObject Component, Network Transform and Network Rigidbody to it and make it a prefab
 
@@ -226,7 +210,7 @@ Each state has to be connect with every single one of them, disable the "Has Exi
 
 26) Go to Edit -> Project Settings -> Script Execution Order -> add the NetworkObjectPool and set the execution to be the last
 
-27) [VIDEO] (youtube.com) - object pooling working.
+27) [VIDEO](https://imgur.com/gQInO7f) - object pooling working.
 
 28) Lastly for the Relay Setup go to https://dashboard.unity3d.com/
 
@@ -234,21 +218,21 @@ Each state has to be connect with every single one of them, disable the "Has Exi
 
 30) Select in the left bar next to shortcuts the plus and find Relay and go to Overview, then on top right -> Get Started
 
-
+![IMAGE](Images/DD6.png)
 
 31) There will be some instructions but all you need to do is go to Edit -> Project Settings -> Services and the project should be already linked, if it's not you can link it following Unity instructions.
 
-
+![IMAGE](Images/dd7.png)
 
 32) Click on next until the finish button appears in the Dashboard Unity Browser.
 
-
+![IMAGE](Images/dd8.png)
 
 33) Go to Unity -> NetworkManager in the scene -> scroll down to Unity Transport -> Change the portocol type to Relay Unity Transport.
 
+![IMAGE](Images/dd9.png)
 
-
-If you followed the steps correctly, congratulations, you got a Multiplayer Sandbox with NetCode for GameObject just as the showcased video! If you had any struggles, I would advise you to watch this full tutorial of series: (VIDEO) [youtube.com], as this was how I learned to create this sandbox and understood the way to do it.
+If you followed the steps correctly, congratulations, you got a Multiplayer Sandbox with NetCode for GameObject just as the showcased video! If you had any struggles, I would advise you to watch this full tutorial of series: [VIDEO](https://www.youtube.com/watch?v=d1FpS5hYlVE&list=PLQMQNmwN3FvyyeI1-bDcBPmZiSaDMbFTi&ab_channel=DilmerValecillos), as this was how I learned to create this sandbox and understood the way to do it.
 
 Thank you for reading and happy coding :)
 
