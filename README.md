@@ -136,7 +136,7 @@ This entire game was created solely to apply the multiplayer concepts I have lea
 The sandbox that's located at the main branch is really easy to make and here is step-by-step guide on how to recreate it. The ball throw game was created from this sandbox and it was a learning experience for me, so if you want to recreate that, make sure to do it in your own way, so you can actually learn Unity NetCode, or even better - make your own game in your own sandbox!
 
 Instructions:
-( coming soon :/ )
+You can find them in the Readme here in the multiplayerSandbox Branch.
 
 # **Conclusion**
 ### **Future Improvements**
